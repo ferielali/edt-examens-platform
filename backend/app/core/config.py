@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_DAYS: int = 7
     
-    # CORS
-    CORS_ORIGINS: list = ["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:3000"]
+    # CORS - Allow all origins for Railway deployment
+    CORS_ORIGINS: list = ["*"]
     
     # Scheduling Algorithm Settings
     MAX_EXAMS_PER_DAY_STUDENT: int = 1
