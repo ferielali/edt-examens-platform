@@ -18,11 +18,14 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Make start script executable
+RUN chmod +x start.sh
+
 # Set default port
 ENV PORT=8000
 
 # Expose port
 EXPOSE 8000
 
-# Use shell to expand environment variable
-ENTRYPOINT ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
+# Use start script
+CMD ["./start.sh"]
