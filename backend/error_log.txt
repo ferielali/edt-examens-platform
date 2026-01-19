@@ -1,0 +1,71 @@
+Traceback (most recent call last):
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.errors.RaiseException: ERREUR:  La salle est déjà occupée pendant ce créneau
+CONTEXT:  fonction PL/pgSQL check_room_overlap(), ligne 18 � RAISE
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\debug_scheduler.py", line 63, in <module>
+    db.commit()
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1969, in commit
+    trans.commit(_to_root=True)
+  File "<string>", line 2, in commit
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1256, in commit
+    self._prepare_impl()
+  File "<string>", line 2, in _prepare_impl
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\state_changes.py", line 139, in _go
+    ret_value = fn(self, *arg, **kw)
+                ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 1231, in _prepare_impl
+    self.session.flush()
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4312, in flush
+    self._flush(objects)
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4447, in _flush
+    with util.safe_reraise():
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\util\langhelpers.py", line 146, in __exit__
+    raise exc_value.with_traceback(exc_tb)
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\session.py", line 4408, in _flush
+    flush_context.execute()
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
+    rec.execute(self)
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
+    util.preloaded.orm_persistence.save_obj(
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
+    _emit_insert_statements(
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\orm\persistence.py", line 1227, in _emit_insert_statements
+    result = connection.execute(
+             ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1416, in execute
+    return meth(
+           ^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\sql\elements.py", line 517, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1639, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1848, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1988, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 2344, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\base.py", line 1969, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\aboubakar\Desktop\Projet de fifi\backend\venv\Lib\site-packages\sqlalchemy\engine\default.py", line 922, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.InternalError: (psycopg2.errors.RaiseException) ERREUR:  La salle est déjà occupée pendant ce créneau
+CONTEXT:  fonction PL/pgSQL check_room_overlap(), ligne 18 � RAISE
+
+[SQL: INSERT INTO examens (module_id, prof_id, salle_id, date_heure, duree_minutes, statut, session_id, nb_inscrits, notes, created_at, updated_at) VALUES (%(module_id)s, %(prof_id)s, %(salle_id)s, %(date_heure)s, %(duree_minutes)s, %(statut)s, %(session_id)s, %(nb_inscrits)s, %(notes)s, %(created_at)s, %(updated_at)s) RETURNING examens.id]
+[parameters: {'module_id': 1, 'prof_id': 1, 'salle_id': 1, 'date_heure': datetime.datetime(2026, 2, 16, 8, 0), 'duree_minutes': 120, 'statut': 'scheduled', 'session_id': 26, 'nb_inscrits': 10, 'notes': None, 'created_at': datetime.datetime(2026, 1, 15, 21, 53, 33, 231694), 'updated_at': datetime.datetime(2026, 1, 15, 21, 53, 33, 231694)}]
+(Background on this error at: https://sqlalche.me/e/20/2j85)
