@@ -5,15 +5,18 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
+import os
 
-# Create database engine with UTF-8 encoding for French characters
+# Get database URL from environment or config
+database_url = os.environ.get("DATABASE_URL", settings.DATABASE_URL)
+
+# Create database engine - simplified for Railway compatibility
 engine = create_engine(
-    settings.DATABASE_URL,
-    pool_size=settings.DATABASE_POOL_SIZE,
-    max_overflow=settings.DATABASE_MAX_OVERFLOW,
+    database_url,
+    pool_size=5,
+    max_overflow=10,
     pool_pre_ping=True,
-    echo=settings.DEBUG,
-    connect_args={"options": "-c client_encoding=utf8"}
+    echo=False
 )
 
 # Session factory
