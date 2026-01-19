@@ -18,8 +18,11 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy application code
 COPY . .
 
+# Set default port
+ENV PORT=8000
+
 # Expose port
 EXPOSE 8000
 
-# Use shell form to allow environment variable expansion
-CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+# Use shell to expand environment variable
+ENTRYPOINT ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port $PORT"]
