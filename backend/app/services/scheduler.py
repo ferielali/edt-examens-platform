@@ -6,7 +6,15 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional, Tuple
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, or_
-from ortools.sat.python import cp_model
+
+# Try to import ortools, but don't fail if not available
+try:
+    from ortools.sat.python import cp_model
+    ORTOOLS_AVAILABLE = True
+except ImportError:
+    ORTOOLS_AVAILABLE = False
+    cp_model = None
+
 from app.models import (
     Examen, Module, LieuExamen, Professeur, Inscription, 
     Etudiant, Formation, Departement, SessionGeneration,
@@ -18,14 +26,19 @@ from app.core.config import settings
 class ExamScheduler:
     """
     Algorithme d'optimisation pour la génération automatique d'EDT
-    utilisant Google OR-Tools (Constraint Programming)
+    utilisant Google OR-Tools (Constraint Programming) ou algorithme glouton
     """
     
     def __init__(self, db: Session):
         self.db = db
-        self.model = cp_model.CpModel()
-        self.solver = cp_model.CpSolver()
-        self.solver.parameters.max_time_in_seconds = settings.SCHEDULING_TIMEOUT_SECONDS
+        self.ortools_available = ORTOOLS_AVAILABLE
+        if ORTOOLS_AVAILABLE:
+            self.model = cp_model.CpModel()
+            self.solver = cp_model.CpSolver()
+            self.solver.parameters.max_time_in_seconds = settings.SCHEDULING_TIMEOUT_SECONDS
+        else:
+            self.model = None
+            self.solver = None
         
     def generate_schedule(
         self,
