@@ -247,11 +247,15 @@ const LoginPage: React.FC = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                             <Text style={{ color: '#64748b', fontSize: 13 }}>⚙️ Admin</Text>
-                            <Text code style={{ fontSize: 11 }}>admin@univ.edu</Text>
+                            <Text code style={{ fontSize: 11 }}>admin.scolarite@univ.edu</Text>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                            <Text style={{ color: '#64748b', fontSize: 13 }}>🏫 Chef Dept.</Text>
+                            <Text code style={{ fontSize: 11 }}>chef.info@univ.edu</Text>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Text style={{ color: '#64748b', fontSize: 13 }}>🔑 Mot de passe</Text>
-                            <Text code style={{ fontSize: 11 }}>Director123!</Text>
+                            <Text style={{ color: '#64748b', fontSize: 13 }}>👨‍🏫 Professeur</Text>
+                            <Text code style={{ fontSize: 11 }}>prof.math@univ.edu</Text>
                         </div>
                     </div>
                 </div>
