@@ -132,8 +132,13 @@ export interface PaginatedResponse<T> {
 }
 
 // API instance
+// Use VITE_API_URL for production (set in Railway), fallback to /api for local dev
+const API_BASE_URL = import.meta.env.VITE_API_URL
+    ? `${import.meta.env.VITE_API_URL}/api`
+    : '/api';
+
 const api: AxiosInstance = axios.create({
-    baseURL: '/api',
+    baseURL: API_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -163,7 +168,7 @@ api.interceptors.response.use(
             const refreshToken = localStorage.getItem('refresh_token');
             if (refreshToken) {
                 try {
-                    const response = await axios.post('/api/auth/refresh', {
+                    const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
                         refresh_token: refreshToken,
                     });
 
