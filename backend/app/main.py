@@ -24,25 +24,64 @@ async def lifespan(app: FastAPI):
     Base.metadata.create_all(bind=engine)
     print("Database tables created successfully!")
     
-    # Seed admin user if not exists
+    # Seed users for all roles if they don't exist
+    users_to_seed = [
+        {
+            "email": "admin@univ.edu",
+            "password": "Director123!",
+            "role": UserRole.DIRECTOR,
+            "nom": "Administrateur",
+            "prenom": "Principal"
+        },
+        {
+            "email": "admin.scolarite@univ.edu",
+            "password": "Admin123!",
+            "role": UserRole.ADMINISTRATOR,
+            "nom": "Martin",
+            "prenom": "Sophie"
+        },
+        {
+            "email": "chef.info@univ.edu",
+            "password": "Chef123!",
+            "role": UserRole.DEPARTMENT_HEAD,
+            "nom": "Dupont",
+            "prenom": "Jean"
+        },
+        {
+            "email": "prof.math@univ.edu",
+            "password": "Prof123!",
+            "role": UserRole.PROFESSOR,
+            "nom": "Bernard",
+            "prenom": "Marie"
+        },
+        {
+            "email": "etudiant@univ.edu",
+            "password": "Etudiant123!",
+            "role": UserRole.STUDENT,
+            "nom": "Petit",
+            "prenom": "Lucas"
+        }
+    ]
+    
     db = SessionLocal()
     try:
-        admin_user = db.query(User).filter(User.email == "admin@univ.edu").first()
-        if not admin_user:
-            print("Creating admin user...")
-            admin_user = User(
-                email="admin@univ.edu",
-                password_hash=get_password_hash("Director123!"),
-                role=UserRole.DIRECTOR,
-                nom="Administrateur",
-                prenom="Principal",
-                active=True
-            )
-            db.add(admin_user)
-            db.commit()
-            print("Admin user created: admin@univ.edu / Director123!")
-        else:
-            print(f"Admin user already exists: {admin_user.email}")
+        for user_data in users_to_seed:
+            existing_user = db.query(User).filter(User.email == user_data["email"]).first()
+            if not existing_user:
+                print(f"Creating user: {user_data['email']} ({user_data['role'].value})...")
+                new_user = User(
+                    email=user_data["email"],
+                    password_hash=get_password_hash(user_data["password"]),
+                    role=user_data["role"],
+                    nom=user_data["nom"],
+                    prenom=user_data["prenom"],
+                    active=True
+                )
+                db.add(new_user)
+                db.commit()
+                print(f"User created: {user_data['email']} / {user_data['password']}")
+            else:
+                print(f"User already exists: {existing_user.email}")
     except Exception as e:
         print(f"Error seeding admin user: {e}")
         db.rollback()
