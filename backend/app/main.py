@@ -5,13 +5,59 @@ Main FastAPI Application
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from contextlib import asynccontextmanager
 from app.core.config import settings
 from app.api import auth_router, examens_router, dashboard_router
+from app.core.database import engine, SessionLocal, Base
+from app.models import User, UserRole
+from app.core.security import get_password_hash
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Startup and shutdown events.
+    Creates database tables and seeds admin user if not exists.
+    """
+    # Startup: Create tables
+    print("Creating database tables...")
+    Base.metadata.create_all(bind=engine)
+    print("Database tables created successfully!")
+    
+    # Seed admin user if not exists
+    db = SessionLocal()
+    try:
+        admin_user = db.query(User).filter(User.email == "admin@univ.edu").first()
+        if not admin_user:
+            print("Creating admin user...")
+            admin_user = User(
+                email="admin@univ.edu",
+                password_hash=get_password_hash("Director123!"),
+                role=UserRole.DIRECTOR,
+                nom="Administrateur",
+                prenom="Principal",
+                active=True
+            )
+            db.add(admin_user)
+            db.commit()
+            print("Admin user created: admin@univ.edu / Director123!")
+        else:
+            print(f"Admin user already exists: {admin_user.email}")
+    except Exception as e:
+        print(f"Error seeding admin user: {e}")
+        db.rollback()
+    finally:
+        db.close()
+    
+    yield
+    # Shutdown
+    print("Shutting down...")
 
 # Create FastAPI application
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
+    lifespan=lifespan,
     description="""
     ## Plateforme d'Optimisation des Emplois du Temps d'Examens Universitaires
     
