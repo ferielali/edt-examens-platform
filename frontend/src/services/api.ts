@@ -133,9 +133,19 @@ export interface PaginatedResponse<T> {
 
 // API instance
 // Use VITE_API_URL for production (set in Railway), fallback to /api for local dev
-const API_BASE_URL = import.meta.env.VITE_API_URL
-    ? `${import.meta.env.VITE_API_URL}/api`
-    : '/api';
+// VITE_API_URL should be the base backend URL without /api suffix
+const getApiBaseUrl = () => {
+    const envUrl = import.meta.env.VITE_API_URL;
+    if (!envUrl) return '/api';
+
+    // Remove trailing slash if present
+    const baseUrl = envUrl.replace(/\/+$/, '');
+
+    // If URL already ends with /api, use as is, otherwise append /api
+    return baseUrl.endsWith('/api') ? baseUrl : `${baseUrl}/api`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 const api: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
