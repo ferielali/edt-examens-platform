@@ -11,9 +11,9 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Set the API URL environment variable
-ARG VITE_API_URL
-ENV VITE_API_URL=$VITE_API_URL
+# Set the API URL environment variable at build time
+# IMPORTANT: Vite requires env vars during build, not runtime
+ENV VITE_API_URL=https://edt-examens-platform-production.up.railway.app
 
 # Build the application
 RUN npm run build
