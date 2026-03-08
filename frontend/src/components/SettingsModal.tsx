@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, message, Tabs, Alert } from 'antd';
 import { MailOutlined, LockOutlined, SettingOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../services/api';
 
 const { Text } = Typography;
 
@@ -9,10 +9,10 @@ interface SettingsModalProps {
     visible: boolean;
     onClose: () => void;
     userEmail: string;
-    token: string;
+    token?: string; // kept for backward compatibility, auth handled by api interceptor
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, userEmail, token }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, userEmail }) => {
     const [emailLoading, setEmailLoading] = useState(false);
     const [passwordLoading, setPasswordLoading] = useState(false);
     const [emailForm] = Form.useForm();
@@ -21,11 +21,9 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, userEma
     const handleEmailChange = async (values: { newEmail: string; password: string }) => {
         setEmailLoading(true);
         try {
-            await axios.put('http://localhost:8000/api/auth/change-email', {
+            await api.put('/auth/change-email', {
                 new_email: values.newEmail,
                 password: values.password
-            }, {
-                headers: { Authorization: `Bearer ${token}` }
             });
             message.success('Email modifié avec succès! Veuillez vous reconnecter.');
             emailForm.resetFields();
@@ -48,9 +46,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose, userEma
 
         setPasswordLoading(true);
         try {
-            await axios.put(`http://localhost:8000/api/auth/change-password?old_password=${encodeURIComponent(values.oldPassword)}&new_password=${encodeURIComponent(values.newPassword)}`, {}, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await api.put(`/auth/change-password?old_password=${encodeURIComponent(values.oldPassword)}&new_password=${encodeURIComponent(values.newPassword)}`);
             message.success('Mot de passe modifié avec succès!');
             passwordForm.resetFields();
         } catch (error: any) {

@@ -1,0 +1,16 @@
+# Netlify configuration for Exam Scheduler Frontend
+# https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Base directory for the build
+  base = "frontend"
+  # Build command
+  command = "npm install && npm run build"
+  # Output directory (Vite outputs to dist/)
+  publish = "dist"
+
+# SPA redirect: all routes go to index.html (required for React Router)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

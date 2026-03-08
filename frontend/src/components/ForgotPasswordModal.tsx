@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Form, Input, Button, Typography, message, Alert, Steps } from 'antd';
 import { MailOutlined, LockOutlined, CheckCircleOutlined, SafetyOutlined, NumberOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import api from '../services/api';
 
 const { Text, Title } = Typography;
 
@@ -23,7 +23,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ visible, onCl
         setLoading(true);
         try {
             // Check if email exists in the system
-            const response = await axios.post('http://localhost:8000/api/auth/request-reset', {
+            const response = await api.post('/auth/request-reset', {
                 email: values.email
             });
 
@@ -60,7 +60,7 @@ const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({ visible, onCl
 
         setLoading(true);
         try {
-            await axios.post('http://localhost:8000/api/auth/reset-password', {
+            await api.post('/auth/reset-password', {
                 email: email,
                 new_password: values.newPassword,
                 verification_code: verificationCode
